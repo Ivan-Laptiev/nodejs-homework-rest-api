@@ -1,8 +1,6 @@
-const {contactSchema} = require ("../schemas")
-const {HttpError} = require ("../helpers");
-const Contact = require("../models/contact");
-
-
+const {contactSchema} = require ("../../schemas")
+const {HttpError} = require ("../../helpers");
+const Contact = require("../../models/contact");
 
 const addContactCtrl = async (req, res, next) => {
     try{
@@ -10,7 +8,8 @@ const addContactCtrl = async (req, res, next) => {
       if(error) {
         throw HttpError(400, error.message);
       }
-      const result = await Contact.create(req.body);
+      const {_id: owner} = req.user;
+      const result = await Contact.create({...req.body, owner});
       res.status(201).json(result);
     }
     catch(error) {
